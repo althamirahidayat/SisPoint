@@ -109,7 +109,7 @@
             <li class="nav-item"><a href="/users" class="nav-link {{ Request::is('users*') ? 'active' : '' }}"><i class="fa-solid fa-users-gear"></i> Manajemen Pengguna</a></li>
             <li class="nav-item"><a href="/students" class="nav-link {{ Request::is('students*') ? 'active' : '' }}"><i class="fa-solid fa-user-graduate"></i> Data Siswa</a></li>
             <li class="nav-item"><a href="/violation-categories" class="nav-link {{ Request::is('violation-categories*') ? 'active' : '' }}"><i class="fa-solid fa-shield-halved"></i> Jenis Pelanggaran</a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-award"></i> Jenis Apresiasi</a></li>
+            <li class="nav-item"><a href="/apresiasi" class="nav-link {{ Request::is('apresiasi*') ? 'active' : '' }}"><i class="fa-solid fa-award"></i> Jenis Apresiasi</a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-circle-user"></i> Profil</a></li>
         </ul>
