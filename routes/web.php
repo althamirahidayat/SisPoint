@@ -16,6 +16,17 @@ Route::get('/students', function () {
     return view('students');
 });
 
+// 1. Route untuk menampilkan halaman apresiasi
+Route::get('/apresiasi', function () {
+    $appreciations = []; 
+    return view('apresiasi', compact('appreciations'));
+})->name('appreciation-categories.index'); // Tambahkan nama ini untuk keamanan sidebar
+
+// 2. TAMBAHKAN BARIS INI (Bypass Route untuk Form Modal Piwa)
+Route::post('/apresiasi', function () {
+    // Sementara kita kosongkan dulu proses simpannya agar tidak error saat diklik
+    return redirect()->back();
+})->name('appreciation-categories.store');
 
 use App\Http\Controllers\LeaderboardController;
 

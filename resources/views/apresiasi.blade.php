@@ -15,7 +15,7 @@
     }
     .btn-primary-custom:hover { background: #4338CA; }
 
-    /* --- Info Grid Modern (Sesuai Gambar 1) --- */
+    /* --- Info Grid Modern --- */
     .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 35px; }
     .info-card { background: white; border-radius: 20px; padding: 25px; display: flex; gap: 20px; border: 1px solid #E2E8F0; position: relative; }
     .info-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; border-radius: 20px 0 0 20px; }
@@ -29,7 +29,7 @@
     .info-text-box h4 { font-size: 15px; font-weight: 800; color: #1E293B; margin-bottom: 6px; }
     .info-text-box p { font-size: 13px; color: #64748B; font-weight: 600; line-height: 1.6; }
 
-    /* --- Table Card & Filter Bar (Sesuai Gambar 2) --- */
+    /* --- Table Card & Filter Bar --- */
     .main-table-card { background: white; border-radius: 24px; padding: 30px; border: 1px solid #EEF2F6; box-shadow: 0 4px 20px rgba(0,0,0,0.01); }
     
     .filter-bar { display: flex; gap: 15px; margin-bottom: 25px; }
@@ -124,32 +124,40 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($appreciations as $item)
+            @php $hasData = false; @endphp
+            @foreach($appreciations as $item)
+                {{-- Validasi: Hanya tampilkan jika user_id data ini cocok dengan ID Admin yang sedang login --}}
+                @if($item->user_id == auth()->user()->id)
+                    @php $hasData = true; @endphp
+                    <tr>
+                        <td style="color: #0F172A; font-weight: 800;">{{ $item->name }}</td>
+                        <td><span class="badge-cat {{ strtolower($item->category) }}">{{ $item->category }}</span></td>
+                        <td style="color: #10B981;">+{{ $item->points }} Poin</td>
+                        <td>
+                            <div class="status-online"><span class="status-dot"></span> {{ $item->is_active ? 'AKTIF' : 'NON-AKTIF' }}</div>
+                        </td>
+                        <td class="action-links" style="text-align: right;">
+                            <button type="button" class="link-edit" 
+                                onclick="openEditModal('{{ $item->id }}', '{{ $item->name }}', '{{ $item->points }}', '{{ $item->category }}')">
+                                Edit
+                            </button>
+                            
+                            <form action="{{ route('appreciation-categories.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="link-hapus" onclick="return confirm('Yakin ingin menghapus data apresiasi ini?')">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endif
+            @endforeach
+
+            {{-- Jika tidak ada data yang diinput oleh admin ini --}}
+            @if(!$hasData)
             <tr>
-                <td style="color: #0F172A; font-weight: 800;">{{ $item->name }}</td>
-                <td><span class="badge-cat {{ strtolower($item->category) }}">{{ $item->category }}</span></td>
-                <td style="color: #10B981;">+{{ $item->points }} Poin</td>
-                <td>
-                    <div class="status-online"><span class="status-dot"></span> {{ $item->is_active ? 'AKTIF' : 'NON-AKTIF' }}</div>
-                </td>
-                <td class="action-links" style="text-align: right;">
-                    <button type="button" class="link-edit" 
-                        onclick="openEditModal('{{ $item->id }}', '{{ $item->name }}', '{{ $item->points }}', '{{ $item->category }}')">
-                        Edit
-                    </button>
-                    
-                    <form action="{{ route('appreciation-categories.destroy', $item->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="link-hapus" onclick="return confirm('Yakin ingin menghapus data apresiasi ini?')">Hapus</button>
-                    </form>
-                </td>
+                <td colspan="5" style="text-align: center; color: #94A3B8; padding: 30px 0;">Belum ada data referensi jenis apresiasi yang Anda input.</td>
             </tr>
-            @empty
-            <tr>
-                <td colspan="5" style="text-align: center; color: #94A3B8; padding: 30px 0;">Belum ada data referensi jenis apresiasi.</td>
-            </tr>
-            @endforelse
+            @endif
         </tbody>
     </table>
 </div>
