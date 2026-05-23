@@ -15,15 +15,13 @@ Route::get('/students', function () {
     return view('students');
 });
 
-// 1. Route untuk menampilkan halaman apresiasi
 Route::get('/apresiasi', function () {
     $appreciations = []; 
     return view('apresiasi', compact('appreciations'));
-})->name('appreciation-categories.index'); // Tambahkan nama ini untuk keamanan sidebar
+})->name('appreciation-categories.index'); 
 
-// 2. TAMBAHKAN BARIS INI (Bypass Route untuk Form Modal Piwa)
+
 Route::post('/apresiasi', function () {
-    // Sementara kita kosongkan dulu proses simpannya agar tidak error saat diklik
     return redirect()->back();
 })->name('appreciation-categories.store');
 
@@ -32,3 +30,13 @@ use App\Http\Controllers\LeaderboardController;
 Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
 
 Route::resource('violation-categories', ViolationCategoryController::class);
+
+use App\Http\Controllers\DashboardSiswaController;
+
+// Proteksi rute menggunakan middleware auth bawaan Laravel
+Route::middleware(['auth'])->group(function () {
+    
+    // Jalur utama menuju Dashboard Siswa
+    Route::get('/dashboardSiswa', [DashboardSiswaController::class, 'index'])->name('dashboard.siswa');
+    
+});
