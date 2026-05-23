@@ -1,4 +1,4 @@
-@extends('layouts.siswa') 
+@extends('layouts.admin') 
 @section('styles')
 <style>
     /* Welcome Card Styling */

@@ -9,22 +9,25 @@ use Carbon\Carbon;
 
 class DashboardSiswaController extends Controller
 {
+    // Hapus atau jangan pakai middleware auth di __construct dulu jika ada
+
     public function index()
     {
-        // 1. Ambil data siswa yang saat ini sedang login secara realtime
-        $user = Auth::user();
+        // 1. BYPASS LOGIN: Buat data siswa tiruan agar tidak memicu error auth
+        $user = (object)[
+            'name' => 'Althamira Hidayat', // Pakai namamu dulu buat test tampilan
+            'kelas' => 'XI PPLG',
+            'poin_pelanggaran' => 5,
+            'total_prestasi' => 2
+        ];
 
-        // 2. Mengambil akumulasi poin pelanggaran langsung dari database siswa tersebut
-        // (Asumsi: Anda memiliki kolom 'poin_pelanggaran' atau relasi tabel pelanggaran)
+        // 2. Mengambil akumulasi poin pelanggaran dari objek di atas
         $poinPelanggaran = $user->poin_pelanggaran ?? 0; 
 
-        // 3. Menghitung total prestasi yang pernah diraih siswa
-        // (Asumsi: Anda memiliki tabel/kolom 'total_prestasi' atau menghitung baris datanya)
+        // 3. Menghitung total prestasi
         $totalPrestasi = $user->total_prestasi ?? 0;
 
-        // 4. Mengambil data Riwayat Aktivitas 7 hari terakhir secara dinamis
-        // Kita gunakan data dummy terstruktur dahulu jika tabel riwayat Anda belum siap,
-        // namun siap diganti dengan query database seperti: DB::table('aktifitas')->where('user_id', $user->id)->get();
+        // 4. Mengambil data Riwayat Aktivitas 7 hari terakhir (Dummy Terstruktur)
         $riwayatAktivitas = [
             [
                 'status' => 'danger',
@@ -44,27 +47,28 @@ class DashboardSiswaController extends Controller
             ]
         ];
 
-        // 5. Mengambil data Top Siswa (Leaderboard) dari sekolah secara dinamis
-        // Mengurutkan siswa berdasarkan perolehan prestasi terbanyak
-        // Jika tabel belum lengkap, ini akan mengambil data user ber-role siswa secara acak/dummy terstruktur
-        $topSiswa = DB::table('users')
-            ->where('role', 'siswa')
-            ->orderBy('total_prestasi', 'desc')
-            ->limit(5)
-            ->get();
+        // 5. Mengambil data Top Siswa (Leaderboard) - Dibungkus try-catch agar jika kolom 'role' belum ada tidak crash
+        try {
+            $topSiswa = DB::table('users')
+                ->orderBy('id', 'desc')
+                ->limit(5)
+                ->get();
+        } catch (\Exception $e) {
+            $topSiswa = collect([]);
+        }
 
-        // Jika database users Anda masih kosong/belum ada kolom total_prestasi, kita buat backup array biar tidak crash
+        // Jika database kosong, pakai backup array biar tidak kosong tampilannya
         if ($topSiswa->isEmpty()) {
             $topSiswa = collect([
                 (object)['name' => 'Citra Lestari', 'kelas' => 'XI PPLG B', 'total_prestasi' => 12],
                 (object)['name' => 'Budi Santoso', 'kelas' => 'XI RPL A', 'total_prestasi' => 8],
                 (object)['name' => 'Eko Prasetyo', 'kelas' => 'X TKR A', 'total_prestasi' => 5],
-                (object)['name' => 'Ahmad Fauzi', 'kelas' => 'XII RPL B', 'total_prestasi' => 3],
+                (object)['name' => 'Ahmad Fauzi', 'XII RPL B', 'total_prestasi' => 3],
                 (object)['name' => 'Dewi Anggraeni', 'kelas' => 'X DKV B', 'total_prestasi' => 1],
             ]);
         }
 
-        // 6. Alirkan seluruh data di atas ke dalam file blade view Anda
+        // 6. Alirkan seluruh data ke dalam file blade view
         return view('dashboardSiswa', compact(
             'user', 
             'poinPelanggaran', 

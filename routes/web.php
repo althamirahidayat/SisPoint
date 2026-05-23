@@ -33,10 +33,9 @@ Route::resource('violation-categories', ViolationCategoryController::class);
 
 use App\Http\Controllers\DashboardSiswaController;
 
-// Proteksi rute menggunakan middleware auth bawaan Laravel
 Route::middleware(['auth'])->group(function () {
-    
-    // Jalur utama menuju Dashboard Siswa
-    Route::get('/dashboardSiswa', [DashboardSiswaController::class, 'index'])->name('dashboard.siswa');
-    
+    // Biarkan route lain yang emang butuh login di sini
 });
+
+// Taruh di bawahnya (di luar grup), berdiri sendiri tanpa embel-embel auth
+Route::get('/dashboardSiswa', [DashboardSiswaController::class, 'index'])->name('dashboard.siswa');
