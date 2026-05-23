@@ -10,7 +10,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { display: flex; background-color: #F8FAFC; min-height: 100vh; color: #1E293B; }
 
-        /* SIDEBAR LIGHT STYLE (Sesuai Screenshot Baru) */
+        /* SIDEBAR LIGHT STYLE */
         .sidebar {
             width: 260px;
             background-color: white;
@@ -105,12 +105,16 @@
         </div>
 
         <ul class="nav-menu">
-            <li class="nav-item"><a href="/" class="nav-link {{ Request::is('/') ? 'active' : '' }}"><i class="fa-solid fa-table-columns"></i> Dashboard</a></li>
+            <li class="nav-item">
+                <a href="{{ route('dashboard') }}" class="nav-link {{ Request::is('dashboard*') || Request::is('/') ? 'active' : '' }}">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                </a>
+            </li>
             <li class="nav-item"><a href="/users" class="nav-link {{ Request::is('users*') ? 'active' : '' }}"><i class="fa-solid fa-users-gear"></i> Manajemen Pengguna</a></li>
             <li class="nav-item"><a href="/students" class="nav-link {{ Request::is('students*') ? 'active' : '' }}"><i class="fa-solid fa-user-graduate"></i> Data Siswa</a></li>
             <li class="nav-item"><a href="/violation-categories" class="nav-link {{ Request::is('violation-categories*') ? 'active' : '' }}"><i class="fa-solid fa-shield-halved"></i> Jenis Pelanggaran</a></li>
             <li class="nav-item"><a href="/apresiasi" class="nav-link {{ Request::is('apresiasi*') ? 'active' : '' }}"><i class="fa-solid fa-award"></i> Jenis Apresiasi</a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="nav-item"><a href="{{ route('leaderboard.index') }}" class="nav-link {{ Request::is('leaderboard*') ? 'active' : '' }}"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-circle-user"></i> Profil</a></li>
         </ul>
 

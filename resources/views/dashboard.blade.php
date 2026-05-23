@@ -42,9 +42,11 @@
     .act-info span { font-size: 11px; color: #94A3B8; }
     .act-points { text-align: right; font-weight: 700; font-size: 13px; }
 
-    .top-siswa-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
-    .rank { font-weight: 800; font-size: 14px; width: 25px; }
-    .top-info { flex-grow: 1; font-size: 13px; font-weight: 700; }
+    .top-siswa-card { background: white; padding: 25px; border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .top-siswa-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #F1F5F9; }
+    .top-siswa-item:last-child { border: none; }
+    .rank { font-weight: 800; font-size: 14px; width: 25px; color: #64748B; }
+    .top-info { flex-grow: 1; font-size: 13px; font-weight: 700; color: #1E293B; }
     .top-pts { font-size: 12px; font-weight: 700; color: #10B981; }
 </style>
 @endsection
@@ -56,7 +58,9 @@
         <p>Berikut adalah ringkasan aktivitas sistem SISPOINT hari ini.</p>
     </div>
     <div style="text-align: right;">
-        <h4 style="font-weight: 800; letter-spacing: 1px;">MINGGU, 17 MEI 2026</h4>
+        <h4 style="font-weight: 800; letter-spacing: 1px;" class="uppercase">
+            {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}
+        </h4>
     </div>
 </div>
 
@@ -68,7 +72,7 @@
         </div>
         <div class="stat-body">
             <p>Total Siswa</p>
-            <h3>2,450</h3>
+            <h3>{{ number_format($totalSiswa) }}</h3>
         </div>
     </div>
     <div class="stat-card">
@@ -78,7 +82,7 @@
         </div>
         <div class="stat-body">
             <p>Total Guru & Staff</p>
-            <h3>124</h3>
+            <h3>{{ number_format($totalGuru) }}</h3>
         </div>
     </div>
     <div class="stat-card">
@@ -88,7 +92,7 @@
         </div>
         <div class="stat-body">
             <p>Pelanggaran Hari Ini</p>
-            <h3>14</h3>
+            <h3>{{ $pelanggaranHariIni }}</h3>
         </div>
     </div>
     <div class="stat-card">
@@ -98,7 +102,7 @@
         </div>
         <div class="stat-body">
             <p>Prestasi Bulan Ini</p>
-            <h3>86</h3>
+            <h3>{{ $prestasiBulanIni }}</h3>
         </div>
     </div>
 </div>
@@ -138,26 +142,24 @@
         </div>
     </div>
 
-    <div class="content-box">
+    <div class="top-siswa-card">
         <div class="box-header">
             <h3>Top Siswa</h3>
         </div>
-        <div class="top-siswa-item">
-            <span class="rank">1</span>
-            <span class="top-info">Althamira</span>
-            <span class="top-pts">120 Pts</span>
+        
+        <div style="margin-bottom: 15px;">
+            @forelse($topSiswa as $index => $siswa)
+            <div class="top-siswa-item">
+                <span class="rank">{{ $index + 1 }}</span>
+                <span class="top-info">{{ $siswa->name }}</span>
+                <span class="top-pts">{{ $siswa->point ?? 0 }} Pts</span>
+            </div>
+            @empty
+            <p style="font-size: 13px; color: #94A3B8; text-align: center; padding: 10px 0;">Belum ada data siswa.</p>
+            @endforelse
         </div>
-        <div class="top-siswa-item">
-            <span class="rank">2</span>
-            <span class="top-info">Savira</span>
-            <span class="top-pts">115 Pts</span>
-        </div>
-        <div class="top-siswa-item">
-            <span class="rank">3</span>
-            <span class="top-info">Elbaddi</span>
-            <span class="top-pts">110 Pts</span>
-        </div>
-        <a href="#" style="display: block; text-align: center; margin-top: 20px; padding: 10px; background: #F8FAFC; border-radius: 12px; text-decoration: none; color: #1E293B; font-weight: 700; font-size: 13px;">Lihat Leaderboard</a>
+
+        <a href="{{ route('leaderboard.index') }}" style="display: block; text-align: center; padding: 10px; background: #F8FAFC; border-radius: 12px; text-decoration: none; color: #1E293B; font-weight: 700; font-size: 13px;">Lihat Leaderboard</a>
     </div>
 </div>
 @endsection
