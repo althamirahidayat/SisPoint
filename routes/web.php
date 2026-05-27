@@ -39,3 +39,11 @@ Route::middleware(['auth'])->group(function () {
 
 // Taruh di bawahnya (di luar grup), berdiri sendiri tanpa embel-embel auth
 Route::get('/dashboardSiswa', [DashboardSiswaController::class, 'index'])->name('dashboard.siswa');
+
+Route::get('/landing', function () {
+    return view('landing');
+});
+
+Route::get('/login', function () {
+    return view('login');
+});
