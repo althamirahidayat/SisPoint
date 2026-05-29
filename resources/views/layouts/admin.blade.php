@@ -110,16 +110,53 @@
                     <i class="fa-solid fa-chart-pie"></i> Dashboard
                 </a>
             </li>
-            <li class="nav-item"><a href="/users" class="nav-link {{ Request::is('users*') ? 'active' : '' }}"><i class="fa-solid fa-users-gear"></i> Manajemen Pengguna</a></li>
-            <li class="nav-item"><a href="/students" class="nav-link {{ Request::is('students*') ? 'active' : '' }}"><i class="fa-solid fa-user-graduate"></i> Data Siswa</a></li>
-            <li class="nav-item"><a href="/violation-categories" class="nav-link {{ Request::is('violation-categories*') ? 'active' : '' }}"><i class="fa-solid fa-shield-halved"></i> Jenis Pelanggaran</a></li>
-            <li class="nav-item"><a href="/apresiasi" class="nav-link {{ Request::is('apresiasi*') ? 'active' : '' }}"><i class="fa-solid fa-award"></i> Jenis Apresiasi</a></li>
-            <li class="nav-item"><a href="{{ route('leaderboard.index') }}" class="nav-link {{ Request::is('leaderboard*') ? 'active' : '' }}"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-circle-user"></i> Profil</a></li>
+
+            <li class="nav-item">
+                <a href="{{ route('users.index') }}" class="nav-link {{ Request::is('users*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-users-gear"></i> Manajemen Pengguna
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('kelas.index') }}" class="nav-link {{ Request::is('direktori-kelas*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-folder-open"></i> Direktori Kelas
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ url('/violation-categories') }}" class="nav-link {{ Request::is('violation-categories*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-shield-halved"></i> Jenis Pelanggaran
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ url('/apresiasi') }}" class="nav-link {{ Request::is('apresiasi*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-award"></i> Jenis Apresiasi
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ url('/leaderboard') }}" class="nav-link {{ Request::is('leaderboard*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-ranking-star"></i> Leaderboard
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ url('/profile') }}" class="nav-link {{ Request::is('profile*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-user"></i> Profil
+                </a>
+            </li>
         </ul>
 
         <a href="#" class="nav-link logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
     </aside>
+
+    <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+    @csrf
+    <button type="submit" style="background: none; border: none; color: #DC2626; cursor: pointer; font-weight: 700;">
+        🚪 Keluar
+    </button>
+</form>
 
     <div class="main-container">
         <header>

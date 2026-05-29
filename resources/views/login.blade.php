@@ -156,6 +156,21 @@
             transform: translateY(-1px);
         }
 
+        /* Alert Pesan Error */
+        .alert-error {
+            background-color: #FEE2E2;
+            color: #DC2626;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border: 1px solid #FCA5A5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         /* Responsive untuk HP */
         @media (max-width: 480px) {
             .btn-back {
@@ -188,15 +203,25 @@
             </div>
 
             <div class="card-body">
-                <form action="#" method="POST">
+                
+                @if($errors->has('loginError'))
+                    <div class="alert-error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        {{ $errors->first('loginError') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('login.process') }}" method="POST">
+                    @csrf
+                    
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" id="username" name="username" class="form-input" placeholder="" required autocomplete="off">
+                        <input type="text" id="username" name="username" class="form-input" placeholder="Masukkan username" required autocomplete="off" value="{{ old('username') }}">
                     </div>
 
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" class="form-input" placeholder="" required>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
                     </div>
 
                     <button type="submit" class="btn-masuk">Masuk</button>

@@ -1,231 +1,92 @@
 @extends('layouts.admin')
 
-@section('styles')
-<style>
-    .page-title-box {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-    .page-title-box h2 { font-size: 26px; font-weight: 800; color: #0F172A; }
-    .page-title-box p { color: #64748B; font-size: 14px; margin-top: 4px; font-weight: 600; }
-
-    .btn-group { display: flex; gap: 12px; }
-    .btn-action {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 20px;
-        font-size: 14px;
-        font-weight: 700;
-        border-radius: 12px;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .btn-outline { background: white; color: #475569; border: 1px solid #CBD5E1; }
-    .btn-outline:hover { background: #F8FAFC; }
-    .btn-primary { background: #6366F1; color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2); }
-    .btn-primary:hover { background: #4F46E5; }
-
-    /* CARD BOX UTAMA */
-    .table-container {
-        background: white;
-        border-radius: 24px;
-        padding: 30px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.01);
-        border: 1px solid #EEF2F6;
-    }
-
-    /* FILTER BAR SECTION */
-    .filter-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        gap: 20px;
-    }
-    .inner-search {
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        padding: 10px 18px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex: 1;
-        max-width: 400px;
-    }
-    .inner-search input { background: none; border: none; outline: none; width: 100%; font-size: 13px; font-weight: 600; }
-    
-    .select-filter {
-        background: white;
-        border: 1px solid #E2E8F0;
-        padding: 10px 16px;
-        border-radius: 12px;
-        font-size: 13px;
-        font-weight: 700;
-        color: #475569;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-    }
-
-    /* TABLE LAYOUT */
-    .custom-table { width: 100%; border-collapse: collapse; text-align: left; }
-    .custom-table th {
-        padding: 16px 20px;
-        color: #94A3B8;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.8px;
-        border-bottom: 1px solid #F1F5F9;
-    }
-    .custom-table td { padding: 18px 20px; font-size: 14px; font-weight: 700; color: #1E293B; border-bottom: 1px solid #F8FAFC; }
-    .custom-table tr:last-child td { border: none; }
-
-    .nis-text { color: #000000; font-weight: 800; }
-    .student-name { display: flex; align-items: center; gap: 12px; }
-    .student-icon {
-        width: 30px; height: 30px; background: #F1F5F9; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center; color: #64748B; font-size: 12px;
-    }
-
-    /* BADGE CHIPS POIN & PRESTASI */
-    .badge-poin { font-size: 11px; font-weight: 800; color: #64748B; background: #F1F5F9; padding: 4px 10px; border-radius: 8px; }
-    .badge-poin.danger { color: #EA580C; background: #FFEDD5; } /* Highlight untuk poin tinggi */
-    
-    .text-prestasi { color: #10B981; font-weight: 800; font-size: 12px; letter-spacing: 0.3px; }
-
-    /* PAGINATION SECTION */
-    .pagination-box {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #F1F5F9;
-        color: #94A3B8;
-        font-size: 13px;
-        font-weight: 600;
-    }
-</style>
-@endsection
-
 @section('content')
-<div class="page-title-box">
+<div style="margin-bottom: 35px; display: flex; justify-content: space-between; align-items: center;">
     <div>
-        <h2>Data Siswa</h2>
-        <p>Manajemen data seluruh siswa SMKN 1 Kota Bekasi.</p>
+        <h2 style="font-size: 28px; font-weight: 800; color: #0F172A;">Manajemen Data Siswa</h2>
+        <p style="color: #64748B; font-size: 14px; margin-top: 5px; font-weight: 600;">Kelola data murid dan akun otomatis sistem SISPOINT.</p>
     </div>
-    <div class="btn-group">
-        <button class="btn-action btn-outline"><i class="fa-solid fa-download"></i> Unduh Laporan</button>
-        <button class="btn-action btn-primary"><i class="fa-solid fa-plus"></i> Tambah Siswa</button>
-    </div>
+    <button onclick="document.getElementById('modalSiswa').style.display='flex'" style="background: #2563EB; color: white; border: none; padding: 12px 24px; font-weight: 700; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.2);">
+        <i class="fa-solid fa-plus" style="margin-right: 8px;"></i> Tambah Murid
+    </button>
 </div>
 
-<div class="table-container">
-    
-    <div class="filter-bar">
-        <div class="inner-search">
-            <i class="fa-solid fa-magnifying-glass" style="color: #94A3B8; font-size: 13px;"></i>
-            <input type="text" placeholder="Cari NIS atau nama siswa...">
-        </div>
-        <button class="select-filter">
-            <i class="fa-solid fa-sliders"></i> Semua Kelas
-        </button>
+@if(session('success'))
+    <div style="background: #DCFCE7; color: #16A34A; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 700;">
+        {{ session('success') }}
     </div>
+@endif
 
-    <table class="custom-table">
+<div style="background: white; padding: 35px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
         <thead>
-            <tr>
-                <th style="width: 15%;">NIS</th>
-                <th style="width: 30%;">NAMA LENGKAP</th>
-                <th style="width: 15%;">KELAS</th>
-                <th style="width: 20%;">POIN PELANGGARAN</th>
-                <th style="width: 15%;">TOTAL PRESTASI</th>
-                <th style="width: 5%; text-align: center;">AKSI</th>
+            <tr style="background-color: #F8FAFC; border-bottom: 2px solid #E2E8F0;">
+                <th style="padding: 15px 20px; color: #64748B; font-size: 12px; font-weight: 800;">NIS</th>
+                <th style="padding: 15px 20px; color: #64748B; font-size: 12px; font-weight: 800;">NAMA LENGKAP</th>
+                <th style="padding: 15px 20px; color: #64748B; font-size: 12px; font-weight: 800;">KELAS</th>
+                <th style="padding: 15px 20px; color: #64748B; font-size: 12px; font-weight: 800;">USERNAME SISTEM</th>
+                <th style="padding: 15px 20px; color: #64748B; font-size: 12px; font-weight: 800; text-align: center;">AKSI</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td class="nis-text">21221001</td>
-                <td>
-                    <div class="student-name">
-                        <div class="student-icon"><i class="fa-solid fa-user-graduate"></i></div>
-                        <span>Althamira</span>
-                    </div>
+        <tbody style="color: #1E293B; font-size: 14px; font-weight: 600;">
+            @forelse($students as $siswa)
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 20px;">{{ $siswa->nis }}</td>
+                <td style="padding: 20px;">{{ $siswa->nama_lengkap }}</td>
+                <td style="padding: 20px;"><span style="background: #F1F5F9; padding: 6px 12px; border-radius: 8px;">{{ $siswa->kelas }}</span></td>
+                <td style="padding: 20px; color: #2563EB;"><strong>{{ $siswa->user->username ?? '-' }}</strong></td>
+                <td style="padding: 20px; text-align: center;">
+                    <form action="{{ route('students.destroy', $siswa->nis) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data murid ini? Akun login juga akan terhapus.')" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" style="background: none; border: none; color: #DC2626; cursor: pointer; font-size: 16px;">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </form>
                 </td>
-                <td style="color: #475569;">XI RPL B</td>
-                <td><span class="badge-poin">15 POIN</span></td>
-                <td><span class="text-prestasi">3 PRESTASI</span></td>
-                <td style="text-align: center; color: #94A3B8; cursor: pointer;"><i class="fa-solid fa-ellipsis-vertical"></i></td>
             </tr>
+            @empty
             <tr>
-                <td class="nis-text">21221002</td>
-                <td>
-                    <div class="student-name">
-                        <div class="student-icon"><i class="fa-solid fa-user-graduate"></i></div>
-                        <span>Savira</span>
-                    </div>
-                </td>
-                <td style="color: #475569;">XII RPL A</td>
-                <td><span class="badge-poin">0 POIN</span></td>
-                <td><span class="text-prestasi">8 PRESTASI</span></td>
-                <td style="text-align: center; color: #94A3B8; cursor: pointer;"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                <td colspan="5" style="padding: 30px; text-align: center; color: #94A3B8;">Belum ada data siswa terpajang. Silakan input baru.</td>
             </tr>
-            <tr>
-                <td class="nis-text">21221003</td>
-                <td>
-                    <div class="student-name">
-                        <div class="student-icon"><i class="fa-solid fa-user-graduate"></i></div>
-                        <span>Ganis ALya</span>
-                    </div>
-                </td>
-                <td style="color: #475569;">XII TKJ A</td>
-                <td><span class="badge-poin">5 POIN</span></td>
-                <td><span class="text-prestasi">12 PRESTASI</span></td>
-                <td style="text-align: center; color: #94A3B8; cursor: pointer;"><i class="fa-solid fa-ellipsis-vertical"></i></td>
-            </tr>
-            <tr>
-                <td class="nis-text">21221004</td>
-                <td>
-                    <div class="student-name">
-                        <div class="student-icon"><i class="fa-solid fa-user-graduate"></i></div>
-                        <span>Fitrianisya</span>
-                    </div>
-                </td>
-                <td style="color: #475569;">XI DKV B</td>
-                <td><span class="badge-poin danger">25 POIN</span></td>
-                <td><span class="text-prestasi">1 PRESTASI</span></td>
-                <td style="text-align: center; color: #94A3B8; cursor: pointer;"><i class="fa-solid fa-ellipsis-vertical"></i></td>
-            </tr>
-            <tr>
-                <td class="nis-text">21221005</td>
-                <td>
-                    <div class="student-name">
-                        <div class="student-icon"><i class="fa-solid fa-user-graduate"></i></div>
-                        <span>Ammar Rahman</span>
-                    </div>
-                </td>
-                <td style="color: #475569;">X TKR B</td>
-                <td><span class="badge-poin">0 POIN</span></td>
-                <td><span class="text-prestasi">5 PRESTASI</span></td>
-                <td style="text-align: center; color: #94A3B8; cursor: pointer;"><i class="fa-solid fa-ellipsis-vertical"></i></td>
-            </tr>
+            @endforelse
         </tbody>
     </table>
+</div>
 
-    <div class="pagination-box">
-        <div>Menampilkan 5 dari 2,450 siswa</div>
-        <div class="btn-group">
-            <button class="btn-action btn-outline" style="padding: 8px 14px; font-size: 12px;">Sebelumnya</button>
-            <button class="btn-action btn-outline" style="padding: 8px 14px; font-size: 12px;">Selanjutnya</button>
+<div id="modalSiswa" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); display: none; justify-content: center; align-items: center; z-index: 9999;">
+    <div style="background: white; width: 100%; max-width: 500px; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+        <div style="background: #0B192C; padding: 20px 30px; color: white; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 18px; font-weight: 800;">Tambah Data Murid Baru</h3>
+            <button onclick="document.getElementById('modalSiswa').style.display='none'" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">&times;</button>
         </div>
+        <form action="{{ route('students.store') }}" method="POST" style="padding: 30px;">
+            @csrf
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 8px;">NOMOR INDUK SISWA (NIS)</label>
+                <input type="text" name="nis" required style="width: 100%; padding: 12px; border: 1.5px solid #BFDBFE; border-radius: 10px; font-weight: 600;" placeholder="Contoh: 222310199">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 8px;">NAMA LENGKAP MURID</label>
+                <input type="text" name="nama_lengkap" required style="width: 100%; padding: 12px; border: 1.5px solid #BFDBFE; border-radius: 10px; font-weight: 600;" placeholder="Contoh: Althamiera Hidayat">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 8px;">KELAS</label>
+                <input type="text" name="kelas" required style="width: 100%; padding: 12px; border: 1.5px solid #BFDBFE; border-radius: 10px; font-weight: 600;" placeholder="Contoh: XI PPLG B">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 8px;">NOMOR TELEPON HP</label>
+                <input type="text" name="no_telp" style="width: 100%; padding: 12px; border: 1.5px solid #BFDBFE; border-radius: 10px; font-weight: 600;" placeholder="Contoh: 0812xxxxxxxx">
+            </div>
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 8px;">ALAMAT RUMAH TINGGAL</label>
+                <textarea name="alamat" rows="3" style="width: 100%; padding: 12px; border: 1.5px solid #BFDBFE; border-radius: 10px; font-weight: 600; resize: none;" placeholder="Tulis alamat rumah lengkap murid..."></textarea>
+            </div>
+            <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                <button type="button" onclick="document.getElementById('modalSiswa').style.display='none'" style="background: #F1F5F9; color: #475569; border: none; padding: 12px 20px; font-weight: 700; border-radius: 10px; cursor: pointer;">Batal</button>
+                <button type="submit" style="background: #2563EB; color: white; border: none; padding: 12px 24px; font-weight: 700; border-radius: 10px; cursor: pointer;">Simpan & Buat Akun</button>
+            </div>
+        </form>
     </div>
-
 </div>
 @endsection
