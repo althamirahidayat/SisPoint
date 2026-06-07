@@ -80,165 +80,48 @@
         <h2>Jenis Apresiasi</h2>
         <p>Daftar referensi poin prestasi dan apresiasi siswa SMKN 1 Kota Bekasi.</p>
     </div>
-    <button class="btn-primary-custom" onclick="openModal('modalTambah')">
+    <button type="button" class="btn-primary-custom" onclick="openModal('modalTambah')">
         <i class="fa-solid fa-plus"></i> Tambah Jenis
     </button>
 </div>
 
-<div class="info-grid">
-    <div class="info-card orange">
-        <div class="info-icon-box"><i class="fa-solid fa-star"></i></div>
-        <div class="info-text-box">
-            <h4>Apresiasi Siswa</h4>
-            <p>Setiap prestasi yang diraih siswa akan menambah poin kedisiplinan dan memberikan dampak positif pada rapor karakter.</p>
-        </div>
-    </div>
-    <div class="info-card indigo">
-        <div class="info-icon-box"><i class="fa-solid fa-award"></i></div>
-        <div class="info-text-box">
-            <h4>Kategori Prestasi</h4>
-            <p>Prestasi dibagi menjadi dua kategori utama: Akademik (Lomba Mapel, LKS) dan Non-Akademik (Olahraga, Seni, Organisasi).</p>
-        </div>
-    </div>
-</div>
-
 <div class="main-table-card">
-    <div class="filter-bar">
-        <div class="search-wrapper">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" class="search-input" placeholder="Cari jenis apresiasi...">
-        </div>
-        <button class="btn-filter">
-            <i class="fa-solid fa-sliders"></i> Filter Kategori
-        </button>
-    </div>
-
     <table class="violation-table">
         <thead>
             <tr>
-                <th style="width: 40%;">NAMA APRESIASI</th>
-                <th style="width: 20%;">KATEGORI</th>
-                <th style="width: 15%;">POIN TAMBAHAN</th>
-                <th style="width: 12%;">STATUS</th>
-                <th style="width: 13%; text-align: right;">AKSI</th>
+                <th>NAMA APRESIASI</th>
+                <th>KATEGORI</th>
+                <th>POIN TAMBAHAN</th>
+                <th>STATUS</th>
+                <th style="text-align: right;">AKSI</th>
             </tr>
         </thead>
         <tbody>
-            @php $hasData = false; @endphp
-            @foreach($appreciations as $item)
-                {{-- Validasi: Hanya tampilkan jika user_id data ini cocok dengan ID Admin yang sedang login --}}
-                @if($item->user_id == auth()->user()->id)
-                    @php $hasData = true; @endphp
-                    <tr>
-                        <td style="color: #0F172A; font-weight: 800;">{{ $item->name }}</td>
-                        <td><span class="badge-cat {{ strtolower($item->category) }}">{{ $item->category }}</span></td>
-                        <td style="color: #10B981;">+{{ $item->points }} Poin</td>
-                        <td>
-                            <div class="status-online"><span class="status-dot"></span> {{ $item->is_active ? 'AKTIF' : 'NON-AKTIF' }}</div>
-                        </td>
-                        <td class="action-links" style="text-align: right;">
-                            <button type="button" class="link-edit" 
-                                onclick="openEditModal('{{ $item->id }}', '{{ $item->name }}', '{{ $item->points }}', '{{ $item->category }}')">
-                                Edit
-                            </button>
-                            
-                            <form action="{{ route('appreciation-categories.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="link-hapus" onclick="return confirm('Yakin ingin menghapus data apresiasi ini?')">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
+            @forelse($appreciations as $item)
+                @if($item->user_id == auth()->id())
+                <tr>
+                    <td style="color: #0F172A; font-weight: 800;">{{ $item->name }}</td>
+                    <td><span class="badge-cat {{ strtolower($item->category) }}">{{ $item->category }}</span></td>
+                    <td style="color: #10B981;">+{{ $item->points }} Poin</td>
+                    <td>
+                        <div class="status-online"><span class="status-dot"></span> {{ $item->is_active ? 'AKTIF' : 'NON-AKTIF' }}</div>
+                    </td>
+                    <td class="action-links" style="text-align: right;">
+                        <button type="button" class="link-edit" onclick="openEditModal('{{ $item->id }}', '{{ $item->name }}', '{{ $item->points }}', '{{ $item->category }}')">Edit</button>
+                        <form action="{{ route('appreciation-categories.destroy', $item->id) }}" method="POST" style="display:inline;">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="link-hapus" onclick="return confirm('Hapus data ini?')">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
                 @endif
-            @endforeach
-
-            {{-- Jika tidak ada data yang diinput oleh admin ini --}}
-            @if(!$hasData)
-            <tr>
-                <td colspan="5" style="text-align: center; color: #94A3B8; padding: 30px 0;">Belum ada data referensi jenis apresiasi yang Anda input.</td>
-            </tr>
-            @endif
+            @empty
+                <tr>
+                    <td colspan="5" style="text-align: center; color: #94A3B8; padding: 30px;">Belum ada data referensi jenis apresiasi yang Anda input.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
 
-<div id="modalTambah" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Tambah Jenis Apresiasi</h3>
-        </div>
-        <form action="{{ route('appreciation-categories.store') }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label>NAMA APRESIASI</label>
-                <input type="text" name="name" class="form-control" placeholder="Contoh: Juara 1 Lomba Olahraga" required>
-            </div>
-            <div class="form-group">
-                <label>JUMLAH POIN</label>
-                <input type="number" name="points" class="form-control" placeholder="Contoh: 40" required>
-            </div>
-            <div class="form-group">
-                <label>KATEGORI</label>
-                <select name="category" class="form-control">
-                    <option value="AKADEMIK">AKADEMIK</option>
-                    <option value="NON-AKADEMIK">NON-AKADEMIK</option>
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('modalTambah')">Batal</button>
-                <button type="submit" class="btn-save">Simpan Data</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="modalEdit" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Edit Jenis Apresiasi</h3>
-        </div>
-        <form id="formEdit" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="form-group">
-                <label>NAMA APRESIASI</label>
-                <input type="text" name="name" id="edit_name" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label>JUMLAH POIN</label>
-                <input type="number" name="points" id="edit_points" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label>KATEGORI</label>
-                <select name="category" id="edit_category" class="form-control">
-                    <option value="AKADEMIK">AKADEMIK</option>
-                    <option value="NON-AKADEMIK">NON-AKADEMIK</option>
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('modalEdit')">Batal</button>
-                <button type="submit" class="btn-save">Update Data</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    function openEditModal(id, name, points, category) {
-        document.getElementById('edit_name').value = name;
-        document.getElementById('edit_points').value = points;
-        document.getElementById('edit_category').value = category;
-        document.getElementById('formEdit').action = '/appreciation-categories/' + id;
-        openModal('modalEdit');
-    }
-
-    window.onclick = function(event) {
-        if (event.target.className === 'modal-overlay') {
-            event.target.style.display = 'none';
-        }
-    }
-</script>
 @endsection
