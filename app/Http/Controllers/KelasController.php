@@ -81,10 +81,10 @@ class KelasController extends Controller
     }
 
     public function destroy($id)
-    {
-        $kelas = Kelas::where('id_kelas', $id)->firstOrFail();
-        $kelas->delete();
+{
+    $kelas = \App\Models\Kelas::findOrFail($id);
+    $kelas->delete();
 
-        return redirect()->back()->with('success', 'Kelas berhasil dihapus permanen.');
-    }
+    return redirect()->route('kelas.index')->with('success', 'Kelas berhasil dihapus.');
+}
 }

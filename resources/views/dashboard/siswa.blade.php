@@ -1,4 +1,4 @@
-@extends('layouts.admin') 
+@extends('layouts.siswa') 
 @section('styles')
 <style>
     /* Welcome Card Styling */
@@ -146,15 +146,12 @@
 @endsection
 
 @section('content')
-<div class="welcome-card">
-    <div>
-        <h2>SELAMAT PAGI, SISWA SMK NEGERI 1!</h2>
-        <div class="class-badge">XI PPLG B</div>
-    </div>
-    <div class="time-info">
-        <div class="time">{{ \Carbon\Carbon::now()->format('H:i') }}</div>
-        <div class="date">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM') }}</div>
-    </div>
+<<h2>
+    SELAMAT PAGI, {{ strtoupper($siswa->nama_lengkap ?? $user->name) }}!
+</h2>
+
+<div class="class-badge">
+    {{ $siswa->kelas ?? '-' }}
 </div>
 
 <h4 class="section-title">Akses Cepat</h4>
@@ -171,14 +168,15 @@
             <i class="fa-solid fa-shield-halved"></i>
         </div>
         <p>Poin Pelanggaran Saya</p>
-        <h3>{{ $poinPelanggaran ?? 15 }}</h3>
+        <h3>{{ $siswa->total_poin_pelanggaran ?? 0 }}</h3>
     </div>
+
     <div class="stat-card-siswa prestasi">
         <div class="icon-circle">
             <i class="fa-solid fa-award"></i>
         </div>
         <p>Total Prestasi Saya</p>
-        <h3>{{ $totalPrestasi ?? 3 }}</h3>
+        <h3>{{ $siswa->total_poin_prestasi ?? 0 }}</h3>
     </div>
 </div>
 

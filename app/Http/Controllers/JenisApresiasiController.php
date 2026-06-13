@@ -2,17 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisApresiasi; // Pastikan Model ini sudah ada
+use App\Models\JenisApresiasi; 
 use Illuminate\Http\Request;
 
 class JenisApresiasiController extends Controller
 {
     public function index()
     {
-        // Mengambil semua data apresiasi
-        $data = JenisApresiasi::all(); 
+        // Variabel diubah menjadi $appreciations agar sesuai dengan @foreach di view
+        $appreciations = JenisApresiasi::all(); 
         
-        // Mengirim data ke view 'apresiasi.index'
-        return view('apresiasi.index', compact('data'));
+        return view('apresiasi', compact('appreciations'));
     }
+
+    public function store(Request $request)
+{
+    // Validasi data
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'points' => 'required|integer',
+        'category' => 'required|string',
+    ]);
+
+    // Simpan ke database
+    JenisApresiasi::create([
+        'nama_apresiasi' => $request->name,
+        'poin' => $request->points,
+        // Sesuaikan dengan nama kolom di tabel kamu
+    ]);
+
+    return redirect()->route('apresiasi.index')->with('success', 'Data apresiasi berhasil ditambah!');
+}
 }

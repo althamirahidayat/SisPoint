@@ -2,22 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Osis extends Model
 {
-    use HasFactory;
-
     protected $table = 'osis';
+    protected $guarded = []; // Agar tidak error saat mass assignment
 
-    protected $fillable = [
-        'id_user',
-        'nama_osis',
-        'kelas_osis',
-        'no_telp_osis',
-    ];
-
+    // Ganti 'id_user' dengan nama kolom asli di tabel 'osis' kamu
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id');

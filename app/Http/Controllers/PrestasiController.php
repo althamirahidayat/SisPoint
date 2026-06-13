@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class PrestasiController extends Controller
 {
+
+    public function create()
+{
+    $appreciations = \App\Models\PrestasiSiswa::all();
+    return view('apresiasi', compact('appreciations'));
+}
     public function store(Request $request)
     {
         // 1. Validasi Input Form (Sesuaikan dengan atribut name di HTML form kamu)
@@ -64,4 +70,6 @@ class PrestasiController extends Controller
         // Kembali ke halaman leaderboard dengan notifikasi sukses
         return redirect()->route('leaderboard.index')->with('success', 'Prestasi kompetisi kelompok berhasil dicatatkan!');
     }
+
+    
 }
